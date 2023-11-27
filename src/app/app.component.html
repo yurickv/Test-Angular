@@ -97,19 +97,14 @@
       <p class="greeting">
         Hello friend, let's check your password for strength!
       </p>
-
       <form class="container">
         <h1>Password Strength Tester</h1>
-        <input
-          type="password"
-          id="passwordInput"
-          placeholder="Enter password"
-        />
-        <div class="password-strength">
-          <div class="section" id="section1"></div>
-          <div class="section" id="section2"></div>
-          <div class="section" id="section3"></div>
-        </div>
+        <app-input
+          (passwordStrengthChange)="onPasswordStrengthChange($event)"
+        ></app-input>
+        <app-password-check
+          [passwordStrength]="passwordStrength"
+        ></app-password-check>
       </form>
     </div>
   </div>
