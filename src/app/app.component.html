@@ -97,17 +97,21 @@
       <p class="greeting">
         Hello friend, let's check your password for strength!
       </p>
-      <form class="container">
+      <form class="container" [formGroup]="formGroup">
         <h1>Password Strength Tester</h1>
+
         <app-input
+          [formControlName]="'password'"
           (passwordStrengthChange)="onPasswordStrengthChange($event)"
         ></app-input>
+
         <app-password-check
           [passwordStrength]="passwordStrength"
         ></app-password-check>
       </form>
+      <!-- {{ formGroup.value | json }} -->
     </div>
   </div>
 </main>
 
-<router-outlet></router-outlet>
+<!-- <router-outlet></router-outlet> -->

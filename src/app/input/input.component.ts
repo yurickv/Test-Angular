@@ -1,35 +1,65 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Output,
+  EventEmitter,
+  forwardRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PasswordStrengthService } from './password-strength.service';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-input',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputComponent),
+      multi: true,
+    },
+  ],
   templateUrl: './input.component.html',
   styleUrl: './input.component.css',
 })
-export class InputComponent implements OnInit {
+export class InputComponent implements ControlValueAccessor {
   @Output() passwordStrengthChange = new EventEmitter<string>();
-  password: string = '';
+
   passwordStrength: string = '';
+
+  public value: string | undefined;
+
+  private onChange!: (value: string) => void;
+  private onTouched!: () => void;
+
+  public onInputValueChange(event: Event): void {
+    const targetDivElement = event.target as HTMLInputElement;
+    const value = targetDivElement.value;
+
+    this.onChange(value);
+    this.updatePasswordStrength(value);
+  }
+
+  public writeValue(value: string): void {
+    this.value = value;
+  }
+
+  public registerOnChange(fn: (value: string) => void): void {
+    this.onChange = fn;
+  }
+
+  public registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
 
   constructor(private passwordStrengthService: PasswordStrengthService) {}
 
-  ngOnInit() {
-    const passwordInput = document.querySelector('#passwordInput');
-    passwordInput?.addEventListener('keyup', (event: Event) => {
-      this.password = (event.target as HTMLInputElement).value;
-      this.updatePasswordStrength();
-    });
-  }
-
-  updatePasswordStrength() {
-    this.passwordStrength = this.passwordStrengthService.getPasswordStrength(
-      this.password
-    );
+  updatePasswordStrength(value) {
+    this.passwordStrength =
+      this.passwordStrengthService.getPasswordStrength(value);
     this.passwordStrengthChange.emit(this.passwordStrength);
-    console.log(this.passwordStrength);
   }
 }
 

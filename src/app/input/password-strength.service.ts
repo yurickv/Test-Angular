@@ -13,7 +13,7 @@ export class PasswordStrengthService {
     const hasSymbol = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
 
     if (length && length < 8) {
-      return 'red';
+      return 'too_small';
     } else if (
       (hasNumber && !hasLetter && !hasSymbol) ||
       (hasLetter && !hasNumber && !hasSymbol) ||

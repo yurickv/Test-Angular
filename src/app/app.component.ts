@@ -1,20 +1,21 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
-import { InputComponent } from './input/input.component';
-import { PasswordCheckComponent } from './password-check/password-check.component';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule, RouterOutlet, InputComponent, PasswordCheckComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   passwordStrength: string = '';
 
+  public formGroup = new FormGroup({
+    password: new FormControl(''),
+  });
+
   onPasswordStrengthChange(passwordStrength: string) {
     this.passwordStrength = passwordStrength;
+    // console.log(passwordStrength);
   }
 }
